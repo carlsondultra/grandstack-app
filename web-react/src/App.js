@@ -3,6 +3,9 @@ import React from 'react'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
 
 import UserList from './components/UserList'
+import ProjectsList from './components/ProjectsList'
+import SamplesList from './components/SamplesList'
+import ExperimentsList from './components/ExperimentsList'
 
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
@@ -28,8 +31,15 @@ import {
   Menu as MenuIcon,
   Dashboard as DashboardIcon,
   People as PeopleIcon,
+  Bookmark as BookmarkIcon,
+  GTranslateSharp as ExperimentsIcon,
+  Receipt as SampleIcon,
+  MenuBook as ClinicalInfo
 } from '@material-ui/icons'
 import Dashboard from './components/Dashboard'
+
+import { Button, Dropdown, Icon, Input} from 'semantic-ui-react'
+
 
 function Copyright() {
   return (
@@ -145,9 +155,11 @@ export default function App() {
 
   return (
     <Router>
+      
       <div className={classes.root}>
         <CssBaseline />
         <AppBar
+          style ={{background: '#000000'}}
           position="absolute"
           className={clsx(classes.appBar, open && classes.appBarShift)}
         >
@@ -164,11 +176,7 @@ export default function App() {
             >
               <MenuIcon />
             </IconButton>
-            <img
-              className={classes.appBarImage}
-              src="img/grandstack.png"
-              alt="GRANDstack logo"
-            />
+            <Icon name="tint" color="red" size ='big'/>
             <Typography
               component="h1"
               variant="h6"
@@ -176,8 +184,13 @@ export default function App() {
               noWrap
               className={classes.title}
             >
-              Welcome To GRANDstack App
+              PLBR: Phenomic Liquid Biopsy Resource  
             </Typography>
+            <Input icon='search' className={classes.navLink} placeholder='Search...' size="large"/>
+                <Button attached='right' icon color='red'>
+                  <Icon color='white' name='shop'/>
+                </Button>
+            
           </Toolbar>
         </AppBar>
         <Drawer
@@ -203,16 +216,67 @@ export default function App() {
               </ListItem>
             </Link>
 
-            <Link to="/users" className={classes.navLink}>
+            {/* <Link to="/users" className={classes.navLink}>
               <ListItem button>
                 <ListItemIcon>
                   <PeopleIcon />
                 </ListItemIcon>
                 <ListItemText primary="Users" />
               </ListItem>
+            </Link> */}
+
+            <Link to="/projects" className={classes.navLink}>
+              <ListItem button>
+                <ListItemIcon>
+                  <BookmarkIcon />
+                </ListItemIcon>
+                <ListItemText primary="Projects" />
+              </ListItem>
             </Link>
+
+            <Link to="/experiments" className={classes.navLink}>
+              <ListItem button>
+                <ListItemIcon>
+                  <ExperimentsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Experiments" />
+              </ListItem>
+            </Link>
+
+            <Link to="/samples" className={classes.navLink}>
+              <ListItem button>
+                <ListItemIcon>
+                  <SampleIcon />
+                </ListItemIcon>
+                <ListItemText primary="Samples" />
+              </ListItem>
+            </Link>
+
+            <Link to="/clinicalinfo" className={classes.navLink}>
+              <ListItem button>
+                <ListItemIcon>
+                  <ClinicalInfo />
+                </ListItemIcon>
+                <ListItemText primary="Clinical Info" />
+              </ListItem>
+            </Link>
+
+            {/* <Link className={classes.navLink}>
+              <ListItem button>
+                <ListItemIcon>
+                <Input icon='search' className={classes.navLink} placeholder='Search...' size="small"/>
+                <Button icon color='black'>
+                  <Icon name='shop'/>
+                </Button>
+                </ListItemIcon>
+              </ListItem>
+            </Link> */}
+
+            
+
           </List>
           <Divider />
+          
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
@@ -221,6 +285,10 @@ export default function App() {
               <Route exact path="/" component={Dashboard} />
               <Route exact path="/businesses" component={UserList} />
               <Route exact path="/users" component={UserList} />
+              <Route exact path="/projects" component={ProjectsList} />
+              <Route exact path="/samples" component={SamplesList} />
+              <Route exact path="/experiments" component={ExperimentsList} />
+
             </Switch>
 
             <Box pt={4}>

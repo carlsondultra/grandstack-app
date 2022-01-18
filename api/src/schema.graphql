@@ -2,6 +2,78 @@ scalar Point
 scalar DateTime
 scalar PointInput
 
+type UserSecond {
+  userId: ID!
+  name: String
+  email: String
+  phone: String
+  Project: Project @relationship(type: "OWNED_BY", direction: IN)
+  Experiment: Experiment @relationship(type: "OWNED_BY", direction: IN)
+  Sample: Sample @relationship(type: "OWNED_BY", direction: IN)
+  ClinicalInfo: ClinicalInfo @relationship(type: "OWNED_BY", direction: IN)
+}
+
+type Project {
+  projectId: ID
+  name: String
+  status: String
+  dataEmbargoStatus: String
+  UserSecond: UserSecond @relationship(type: "OWNED_BY", direction: OUT)
+  Sample: Sample @relationship(type: "INCLUDES", direction: OUT)
+}
+
+
+type Sample {
+  sampleID: ID!
+  name: String
+  gender: String
+  age: Int
+  # rawSequencingData: ObjectId
+  # processedDataOnHG19: ObjectId
+  # processedDataOnHG38: ObjectId
+  Project: Project @relationship(type: "INCLUDES", direction: IN)
+  UserSecond: UserSecond @relationship(type: "OWNED_BY", direction: OUT)
+  Experiment: Experiment @relationship(type: "INCLUDES", direction: OUT)
+  ClinicalInfo: ClinicalInfo @relationship(type: "INCLUDES", direction: OUT)
+  QualityControl: QualityControl @relationship(type: "INCLUDES", direction: OUT)
+  
+}
+
+type Experiment {
+  experimentID: ID!
+  name: String
+  componentPrep: String
+  medipWashes: String
+  pcr: String
+  sequencing: String
+  Sample: Sample @relationship(type: "INCLUDES", direction: IN)
+  UserSecond: UserSecond @relationship(type: "OWNED_BY", direction: OUT)
+}
+
+type QualityControl {
+  qcid: ID!
+  # alignmentMetrics: ObjectId
+  # libraryComplexity
+  # signalEnrichment
+  Sample: Sample @relationship(type: "INCLUDES", direction: IN)
+}
+
+type ClinicalInfo {
+  clinicalInfoID: ID!
+  tumourType: String
+  tumourSubtype: String
+  tumourStage: String
+  treatment: String
+  Sample: Sample @relationship(type: "INCLUDES", direction: IN)
+  UserSecond: UserSecond @relationship(type: "OWNED_BY", direction: OUT)
+  TumourType: TumourType @relationship(type: "HAS", direction: OUT)
+}
+
+type TumourType {
+  oncotreeCode: String
+  ClinicalInfo: ClinicalInfo @relationship(type: "HAS", direction: IN)
+}
+
 type User {
   userId: ID!
   name: String
@@ -93,4 +165,7 @@ type Query {
     @cypher(
       statement: "MATCH (r:Review) WITH r.stars AS stars, COUNT(*) AS count ORDER BY stars RETURN {stars: stars, count: count}"
     )
+  projectCount: Int @cypher(statement: "MATCH (p:Project) RETURN COUNT(p)")
+  projectName: String @cypher(statement: "MATCH (p:Project) RETURN p.name")
+  projectList: [Project] @cypher(statement: "MATCH (p:Project) WITH p.name AS name RETURN {name: name}")
 }

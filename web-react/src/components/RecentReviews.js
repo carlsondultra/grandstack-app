@@ -24,6 +24,9 @@ const GET_RECENT_REVIEWS_QUERY = gql`
   }
 `
 
+
+
+
 export default function RecentReviews() {
   const { loading, error, data } = useQuery(GET_RECENT_REVIEWS_QUERY)
   if (error) return <p>Error</p>
@@ -42,6 +45,7 @@ export default function RecentReviews() {
             <TableCell align="right">Review Stars</TableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
           {data.reviews.map((row) => (
             <TableRow key={row.id}>
@@ -53,6 +57,7 @@ export default function RecentReviews() {
             </TableRow>
           ))}
         </TableBody>
+        
       </Table>
     </React.Fragment>
   )
